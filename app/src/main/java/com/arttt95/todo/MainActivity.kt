@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.arttt95.todo.adapter.TarefaAdapter
 import com.arttt95.todo.database.TarefaDAO
 import com.arttt95.todo.databinding.ActivityMainBinding
 import com.arttt95.todo.model.Tarefa
@@ -18,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var listaTarefas = emptyList<Tarefa>()
+    private var tarefaAdapter: TarefaAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +34,16 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(this, AdicionarTarefaActivity::class.java)
 
+        tarefaAdapter = TarefaAdapter()
+
+        binding.rvTarefas.adapter = tarefaAdapter
+
+        binding.rvTarefas.layoutManager = LinearLayoutManager(this)
 
 
-            with(binding) {
+
+        with(binding) {
+
             fabAdicionar.setOnClickListener {
 
                 startActivity(intent)
@@ -45,12 +55,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
     override fun onStart() {
         super.onStart()
+
+        atualizarListaTarefas()
+
+    }
+
+    private fun atualizarListaTarefas() {
 
         val tarefaDAO = TarefaDAO(this)
 
         listaTarefas = tarefaDAO.listar()
+
+        tarefaAdapter?.recarregarLista(listaTarefas)
 
         listaTarefas.forEach { tarefa ->
 
@@ -59,4 +79,5 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
 }
