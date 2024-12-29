@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteCursor
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import android.widget.Toast
 import com.arttt95.todo.model.Tarefa
 
 class TarefaDAO(context: Context) : ITarefaDAO {
@@ -42,8 +43,28 @@ class TarefaDAO(context: Context) : ITarefaDAO {
         TODO("Not yet implemented")
     }
 
-    override fun deletar(id: Int): Boolean {
-        TODO("Not yet implemented")
+    override fun deletar(idTarefa: Int): Boolean {
+
+        val condicao = "${DatabaseHelper.COLUMN_ID_TAREFA} = ?"
+        val args = arrayOf(idTarefa.toString())
+
+        try {
+
+            writer.delete(
+                DatabaseHelper.NOME_TB_TAREFAS,
+                condicao,
+                args
+            )
+            Log.i("info_db", "Sucesso: DELET -> TarefaDAO")
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.i("info_db", "Err: DELET -> TarefaDAO")
+            return false
+        }
+
+        return true
+
     }
 
     override fun listar(): List<Tarefa> {

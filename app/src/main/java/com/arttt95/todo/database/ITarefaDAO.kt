@@ -6,7 +6,7 @@ interface ITarefaDAO {
 
     fun salvar(tarefa: Tarefa) : Boolean
     fun atualizar(tarefa: Tarefa) : Boolean
-    fun deletar(id: Int) : Boolean
+    fun deletar(idTarefa: Int) : Boolean
     fun listar() : List<Tarefa>
 
 }

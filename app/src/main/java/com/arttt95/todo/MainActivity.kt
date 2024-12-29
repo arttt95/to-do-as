@@ -3,7 +3,9 @@ package com.arttt95.todo
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -34,7 +36,11 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(this, AdicionarTarefaActivity::class.java)
 
-        tarefaAdapter = TarefaAdapter()
+        tarefaAdapter = TarefaAdapter(
+            { id ->
+                confirmarExclusao(id)
+            }
+        )
 
         binding.rvTarefas.adapter = tarefaAdapter
 
@@ -50,11 +56,33 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-
-
         }
     }
 
+    private fun confirmarExclusao(id: Int) {
+
+        val alertBuilder = AlertDialog.Builder(this)
+        alertBuilder.setTitle("Consfirmar exclusão")
+        alertBuilder.setMessage("Deseja realmente excluir a tarefa?")
+
+        alertBuilder.setPositiveButton("Sim"){ _ ,_ ->
+
+            val tarefaDAO = TarefaDAO(this)
+
+            if(tarefaDAO.deletar(id)) {
+                atualizarListaTarefas()
+                Toast.makeText(this, "Sucesso ao remover tarefa", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Erro ao remover tarefa", Toast.LENGTH_LONG).show()
+            }
+
+        }
+
+        alertBuilder.setNegativeButton("Não"){ _ ,_ ->}
+
+        alertBuilder.create().show()
+
+    }
 
 
     override fun onStart() {
