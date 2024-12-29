@@ -37,26 +37,28 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, AdicionarTarefaActivity::class.java)
 
         tarefaAdapter = TarefaAdapter(
-            { id ->
-                confirmarExclusao(id)
-            }
+            { id -> confirmarExclusao(id) },
+            { tarefa -> editar(tarefa) }
         )
 
         binding.rvTarefas.adapter = tarefaAdapter
 
         binding.rvTarefas.layoutManager = LinearLayoutManager(this)
 
+        binding.fabAdicionar.setOnClickListener {
 
-
-        with(binding) {
-
-            fabAdicionar.setOnClickListener {
-
-                startActivity(intent)
-
-            }
+            startActivity(intent)
 
         }
+
+    }
+
+    private fun editar(tarefa: Tarefa) {
+
+        val intent = Intent(this, AdicionarTarefaActivity::class.java)
+        intent.putExtra("tarefa", tarefa)
+        startActivity(intent)
+
     }
 
     private fun confirmarExclusao(id: Int) {
@@ -83,7 +85,6 @@ class MainActivity : AppCompatActivity() {
         alertBuilder.create().show()
 
     }
-
 
     override fun onStart() {
         super.onStart()

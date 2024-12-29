@@ -7,7 +7,10 @@ import com.arttt95.todo.databinding.ItemTarefaBinding
 import com.arttt95.todo.model.Tarefa
 
 class TarefaAdapter(
-    val onClickExcluir: (Int) -> Unit
+
+    val onClickExcluir: (Int) -> Unit,
+    val onClickEditar: (Tarefa) -> Unit
+
 ) : RecyclerView.Adapter<TarefaAdapter.TarefaViewHolder> (){
 
     private var listaTarefas: List<Tarefa> = emptyList()
@@ -26,11 +29,16 @@ class TarefaAdapter(
         }
 
         fun bind(tarefa: Tarefa) {
+
             binding.textDescricao.text = tarefa.descricao
             binding.textData.text = tarefa.dataCadastro
 
             binding.btnExcluir.setOnClickListener{
                 onClickExcluir(tarefa.idTarefa)
+            }
+
+            binding.btnEditar.setOnClickListener {
+                onClickEditar(tarefa)
             }
 
         }
