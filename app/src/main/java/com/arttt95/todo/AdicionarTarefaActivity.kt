@@ -1,6 +1,7 @@
 package com.arttt95.todo
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -26,19 +27,71 @@ class AdicionarTarefaActivity : AppCompatActivity() {
             insets
         }
 
-        with(binding) {
+        // Recuperar tarefa enviada de MainActivity
+        val bundle = intent.getParcelableExtra<Tarefa>("tarefa")
 
-            btnSalvar.setOnClickListener {
+        var tarefa: Tarefa? = null
 
-                salvar()
+        if(bundle != null) {
+            tarefa = bundle
+            binding.editTarefa.setText(bundle.descricao)
+            binding.textAdicionar.text = "Atualizar descrição"
+        }
 
+        binding.btnSalvar.setOnClickListener {
+
+            if(binding.editTarefa.text.isNotEmpty()) {
+
+                if(tarefa != null) {
+                    editar(tarefa)
+                } else {
+                    salvar()
+                }
+
+            } else {
+                Toast.makeText(this, "Insira uma descrição", Toast.LENGTH_LONG).show()
             }
 
         }
 
     }
 
+    private fun editar(tarefa: Tarefa) {
+        val descricao = binding.editTarefa.text.toString()
+        val tarefaAtualizacao = Tarefa(tarefa.idTarefa, descricao, "default")
+
+        val tarefaDAO = TarefaDAO(this)
+//        tarefaDAO.atualizar(tarefaAtualizacao)
+
+        if(tarefaDAO.atualizar(tarefaAtualizacao)) {
+            Toast.makeText(
+                this,
+                "Tarefa atualizada com sucesso",
+                Toast.LENGTH_LONG).show()
+            finish()
+        }
+
+    }
+
     private fun salvar() {
+
+        val descricao = binding.editTarefa.text.toString()
+
+        val tarefa = Tarefa(-1, descricao, "default")
+
+        val tarefaDAO = TarefaDAO(this)
+
+        if(tarefaDAO.salvar(tarefa)) {
+            Toast.makeText(
+                this,
+                "Tarefa inserida com sucesso",
+                Toast.LENGTH_LONG).show()
+            finish()
+        }
+
+    }
+
+   /* private fun salvar() {
 
         val descricao = binding.editTarefa.text.toString()
 
@@ -56,5 +109,5 @@ class AdicionarTarefaActivity : AppCompatActivity() {
             Toast.makeText(this, "Insira uma descrição", Toast.LENGTH_LONG).show()
         }
 
-    }
+    }*/
 }

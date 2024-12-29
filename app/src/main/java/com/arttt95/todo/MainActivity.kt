@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     private fun confirmarExclusao(id: Int) {
 
         val alertBuilder = AlertDialog.Builder(this)
-        alertBuilder.setTitle("Consfirmar exclusão")
+        alertBuilder.setTitle("Confirmar exclusão")
         alertBuilder.setMessage("Deseja realmente excluir a tarefa?")
 
         alertBuilder.setPositiveButton("Sim"){ _ ,_ ->
